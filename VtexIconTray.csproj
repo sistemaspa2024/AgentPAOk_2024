@@ -110,5 +110,9 @@
   <ItemGroup>
     <None Include="Imgs\Redes.gif" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Imgs\2.png" />
+    <Content Include="Imgs\3.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
