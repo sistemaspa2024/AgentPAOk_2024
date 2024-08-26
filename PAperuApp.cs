@@ -18,11 +18,7 @@ using RestSharp;
 using FluentFTP;
 
 using Microsoft.Office.Interop.Excel;
-
-
-
-
-
+using VtexIconTray.Servicios;
 
 namespace VtexIconTray
 {
@@ -34,7 +30,7 @@ namespace VtexIconTray
         private System.Windows.Forms.MenuItem menuItem2;
         private System.Windows.Forms.MenuItem menuItem3;
         private System.Windows.Forms.MenuItem menuItem4;
-        public static string ConnectionString = ""; 
+        public static string ConnectionString = "";
         public static string UsuarioToken = "";
         public static string ClaveToken = "";
         public static string MachineName { get; }
@@ -126,14 +122,14 @@ namespace VtexIconTray
         {
 
             public string ruc { get; set; }
-            public string nombre{ get; set; }
+            public string nombre { get; set; }
             public string direccion { get; set; }
             public string fono { get; set; }
             public string email { get; set; }
             public string contacto { get; set; }
             public string ubigeo { get; set; }
             public string ctacte { get; set; }
-            public string moneda{ get; set; }
+            public string moneda { get; set; }
             public string tipocompra { get; set; }
             public string contratista { get; set; }
             public string banco { get; set; }
@@ -229,7 +225,7 @@ namespace VtexIconTray
                 txtServer.Text = "LAPGH2101";
             }
             */
-            
+
 
             DtHoraProceso.ShowUpDown = true;
 
@@ -250,6 +246,10 @@ namespace VtexIconTray
 
             TimerVtex.Enabled = true;
             TimerVtex.Start();
+
+
+
+
         }
 
         private void InitializeContextMenu()
@@ -293,7 +293,7 @@ namespace VtexIconTray
             this.grpEventos.Visible = true;
             tabVtex.SelectedIndex = 1;
         }
- 
+
         private void Configuration_Click(object Sender, EventArgs e)
         {
             Show();
@@ -356,23 +356,23 @@ namespace VtexIconTray
             {
                 client.Connect();
                 foreach (FtpListItem xitem in client.GetListing(strSubdirectorios_FTP, FtpListOption.Size))
+                {
+                    try
                     {
-                        try
+                        if (xitem.Size > 0)
                         {
-                            if (xitem.Size > 0)
-                            {
                             client.DownloadFile(strDireccionLocal + xitem.Name, xitem.FullName, FtpLocalExists.Overwrite);
 
                             client.DeleteFile(xitem.FullName);
 
-                            }
                         }
-                        catch (WebException exa2)
-                        {
-                            errormen = exa2.Message;
-                        }
-
                     }
+                    catch (WebException exa2)
+                    {
+                        errormen = exa2.Message;
+                    }
+
+                }
                 client.Disconnect();
 
             }
@@ -387,8 +387,8 @@ namespace VtexIconTray
 
 
         }
-    /*----------------------------- Proceso de actualizacion de archivos ---------------------------------*/
-    public void CoyFilesService (string RutaOrigen, string RutaDestino, string NombreArchivo)
+        /*----------------------------- Proceso de actualizacion de archivos ---------------------------------*/
+        public void CoyFilesService(string RutaOrigen, string RutaDestino, string NombreArchivo)
         {
             // Copiado de Archivos //
             string fileName = "SAIGNaLocal.exe";
@@ -420,8 +420,8 @@ namespace VtexIconTray
             string Fecha = DateTime.Now.ToString("dd/MM/yyyy");
 
 
-            DtFecha.Value = DateTime.Parse(Fecha) ;
-            
+            DtFecha.Value = DateTime.Parse(Fecha);
+
 
 
 
@@ -442,8 +442,9 @@ namespace VtexIconTray
             Hora = DateTime.Now.ToString("HH:mm:ss");
             Fecha = DateTime.Now.ToString("dd/MM/yyyy");
 
-            Adiciona("Descarga Resumen " + Fecha + " " + Hora);
-            Ordenes = GetResumenCCosto();
+            //QUITAR EXCEL
+            //Adiciona("Descarga Resumen " + Fecha + " " + Hora);
+            //Ordenes = GetResumenCCosto();
 
 
 
@@ -459,7 +460,7 @@ namespace VtexIconTray
             Adiciona("Copiado de FTP - Inicio " + Fecha + " " + Hora);
             FTPConecta();
 
-   
+
             Hora = DateTime.Now.ToString("HH:mm:ss");
             Fecha = DateTime.Now.ToString("dd/MM/yyyy");
             Adiciona("Copiado de FTP - finalizacion " + Fecha + " " + Hora);
@@ -954,10 +955,10 @@ namespace VtexIconTray
             System.IO.File.WriteAllText(path, json);
         }
         */
-        
+
         private static string GetToken(string _Usuario, string _Password)
         {
-            var url = $"https://8bb3af77c1.nxcli.net/rest/all/V1/integration/admin/token?username="+_Usuario+"&password="+_Password ;
+            var url = $"https://8bb3af77c1.nxcli.net/rest/all/V1/integration/admin/token?username=" + _Usuario + "&password=" + _Password;
 
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -992,7 +993,7 @@ namespace VtexIconTray
 
         private static string GetProductSku(string _Sku)
         {
-            var url = $"https://8bb3af77c1.nxcli.net/rest/all/V1/products/"+_Sku;
+            var url = $"https://8bb3af77c1.nxcli.net/rest/all/V1/products/" + _Sku;
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
 
             string _Token;
@@ -1037,7 +1038,7 @@ namespace VtexIconTray
 
             string Fecha = DateTime.Now.ToString("dd/MM/yyyy");
 
-            var url = $"http://157.90.80.58:9040/PAServices/api/ProveedoresDsige?ItemCode="+Fecha;
+            var url = $"http://157.90.80.58:9040/PAServices/api/ProveedoresDsige?ItemCode=" + Fecha;
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.PreAuthenticate = false;
@@ -1062,7 +1063,7 @@ namespace VtexIconTray
                             {
                                 List<ProveedoresDsige> ListaOrdenesTotal = JsonConvert.DeserializeObject<List<ProveedoresDsige>>(responseBody);
 
-                                for (int i = 0; i <= ListaOrdenesTotal.Count()-1; i++)
+                                for (int i = 0; i <= ListaOrdenesTotal.Count() - 1; i++)
                                 {
                                     string ID_Proveedor = ListaOrdenesTotal[i].ID_Proveedor;
                                     string Codigo = ListaOrdenesTotal[i].Codigo;
@@ -1161,7 +1162,7 @@ namespace VtexIconTray
 
             var url = $"http://157.90.80.58:9040/PAServices/api/ArticulosDsige?ItemCode=" + Fecha;
 
-            url = $"http://157.90.80.58:9040/PAServices/api/ArticulosDsige" ;
+            url = $"http://157.90.80.58:9040/PAServices/api/ArticulosDsige";
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.PreAuthenticate = false;
@@ -1188,7 +1189,7 @@ namespace VtexIconTray
                                 //{
                                 List<ArticulosDsige> ListaOrdenesTotal = JsonConvert.DeserializeObject<List<ArticulosDsige>>(responseBody);
 
-                                for (int i = 0; i <= ListaOrdenesTotal.Count()-1; i++)
+                                for (int i = 0; i <= ListaOrdenesTotal.Count() - 1; i++)
                                 {
 
                                     string ID_Articulo = ListaOrdenesTotal[i].ID_Articulo;
@@ -1208,7 +1209,7 @@ namespace VtexIconTray
 
 
 
-                                    var Items_Load = new ArticulosDsige 
+                                    var Items_Load = new ArticulosDsige
                                     {
                                         ID_Articulo = ID_Articulo,
                                         Codigo = Codigo,
@@ -1266,14 +1267,14 @@ namespace VtexIconTray
                                     }
 
                                 }
-                               
+
                             }
 
 
                             catch (Exception e)
                             {
                                 Console.Out.WriteLine(e.ToString());
-                                
+
                             }
 
 
@@ -1293,7 +1294,7 @@ namespace VtexIconTray
             }
             return "";
         }
-        
+
         private static string GetProveedoresCentral()
         {
             //string _Token;
@@ -1304,7 +1305,7 @@ namespace VtexIconTray
             //DtFecha.Value.ToString("dd/MM/yyyy");
             string Fecha = DateTime.Now.ToString("dd/MM/yyyy");
 
-            var url = $"https://apirest.detroit.pe/BUX/v1/" ;
+            var url = $"https://apirest.detroit.pe/BUX/v1/";
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
 
@@ -1346,7 +1347,7 @@ namespace VtexIconTray
 
                 var responseString = new StreamReader(response1a.GetResponseStream()).ReadToEnd();
 
-                List<ProveedoresCentral> ListaProveedores= JsonConvert.DeserializeObject<List<ProveedoresCentral>>(responseString);
+                List<ProveedoresCentral> ListaProveedores = JsonConvert.DeserializeObject<List<ProveedoresCentral>>(responseString);
 
                 for (int i = 0; i <= ListaProveedores.Count() - 1; i++)
                 {
@@ -1358,7 +1359,7 @@ namespace VtexIconTray
 
 
 
-                    using (WebResponse response = request.GetResponse())
+                using (WebResponse response = request.GetResponse())
                 {
                     using (Stream strReader = response.GetResponseStream())
                     {
@@ -1582,7 +1583,7 @@ namespace VtexIconTray
             return "";
         }
 
-        
+
 
         private static string GetResumenCCosto()
         {
@@ -1630,7 +1631,7 @@ namespace VtexIconTray
 
 
 
-                                
+
                                 var cta70 = ListaOrdenesTotal.Where(ResumenCCosto => ResumenCCosto.Codigo == "70");
                                 /*
 
@@ -1648,7 +1649,7 @@ namespace VtexIconTray
 
 
 
- 
+
                                 Microsoft.Office.Interop.Excel.Worksheet workSheet = excelApp.ActiveSheet;
                                 workSheet.Name = "Resumen";
 
@@ -1738,13 +1739,13 @@ namespace VtexIconTray
                                     workSheet.Cells[Fila, "N"] = ListaOrdenesTotal[i].M202211;
 
                                     //worksheet.Cells["B12"].Formula = "=COUNT(B1:B11)";
-                                    workSheet.Cells[Fila, "P"].Formula = "=SUMA(D"+Fila+":D"+Fila+")";
+                                    workSheet.Cells[Fila, "P"].Formula = "=SUMA(D" + Fila + ":D" + Fila + ")";
 
                                     Microsoft.Office.Interop.Excel.Range xlRange = workSheet.UsedRange;
 
                                     workSheet.Cells[Fila, "Q"] = ListaOrdenesTotal[i].M202212;
 
-                                    workSheet.Range["D"+Fila+":D"+Fila].Font.Size = 20;
+                                    workSheet.Range["D" + Fila + ":D" + Fila].Font.Size = 20;
                                     workSheet.Range["D" + Fila + ":O" + Fila].NumberFormat = "0.00";
                                     workSheet.Range["D" + Fila + ":O" + Fila].Borders[Microsoft.Office.Interop.Excel.XlBordersIndex.xlEdgeBottom].LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
 
@@ -1791,77 +1792,77 @@ namespace VtexIconTray
 
 
 
-                                /*        GENERA JSON         */
+                                    /*        GENERA JSON         */
 
-                                //string json = JsonConvert.SerializeObject(product);
-                                //string path = @"c:\json\product.json";
-                                //System.IO.File.WriteAllText(path, json);
+                                    //string json = JsonConvert.SerializeObject(product);
+                                    //string path = @"c:\json\product.json";
+                                    //System.IO.File.WriteAllText(path, json);
 
-                                /*------------------------------------------------*/
-
-
-                                /*
-
-                                try
-                                {
-
-                                    string json = JsonConvert.SerializeObject(PO_Load);
-                                    string path = @"c:\json\o" + Id_Compra + ".json";
-                                    System.IO.File.WriteAllText(path, json);
-
-                                    string Data = json; //nuevo
-
-                                    var url1 = $"http://209.45.50.65/production/WebApi_PA_Peru/api/Migration/saveUpdatePurchaseOrder";
-
-                                    HttpWebRequest request1 = (HttpWebRequest)WebRequest.Create(url1);
-
-                                    request1.PreAuthenticate = false;
-                                    request1.Method = "POST";
-                                    request1.KeepAlive = true; //nuevo
-                                    request1.ContentType = "application/json";
-                                    request1.Accept = "application/json";
-
-                                    byte[] postBytes = Encoding.UTF8.GetBytes(Data); //nuevo
-                                    Stream requestStream = request1.GetRequestStream(); //nuevo
-                                    requestStream.Write(postBytes, 0, postBytes.Length); //nuevo
-                                    requestStream.Close(); //nuevo
+                                    /*------------------------------------------------*/
 
 
-                                    HttpWebResponse response1 = (HttpWebResponse)request1.GetResponse();
-                                    Stream resStream = response1.GetResponseStream();
-                                    var sr = new StreamReader(response1.GetResponseStream());
-                                    string responseText = sr.ReadToEnd();
+                                    /*
+
+                                    try
+                                    {
+
+                                        string json = JsonConvert.SerializeObject(PO_Load);
+                                        string path = @"c:\json\o" + Id_Compra + ".json";
+                                        System.IO.File.WriteAllText(path, json);
+
+                                        string Data = json; //nuevo
+
+                                        var url1 = $"http://209.45.50.65/production/WebApi_PA_Peru/api/Migration/saveUpdatePurchaseOrder";
+
+                                        HttpWebRequest request1 = (HttpWebRequest)WebRequest.Create(url1);
+
+                                        request1.PreAuthenticate = false;
+                                        request1.Method = "POST";
+                                        request1.KeepAlive = true; //nuevo
+                                        request1.ContentType = "application/json";
+                                        request1.Accept = "application/json";
+
+                                        byte[] postBytes = Encoding.UTF8.GetBytes(Data); //nuevo
+                                        Stream requestStream = request1.GetRequestStream(); //nuevo
+                                        requestStream.Write(postBytes, 0, postBytes.Length); //nuevo
+                                        requestStream.Close(); //nuevo
 
 
-                                    //string resultado = JsonConvert.SerializeObject(PO_Load);
-                                    ResultadosCarga ResultadoProceso = JsonConvert.DeserializeObject<ResultadosCarga>(responseText);
+                                        HttpWebResponse response1 = (HttpWebResponse)request1.GetResponse();
+                                        Stream resStream = response1.GetResponseStream();
+                                        var sr = new StreamReader(response1.GetResponseStream());
+                                        string responseText = sr.ReadToEnd();
 
 
-                                    //using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"C:\json\order1.txt", true))
-                                    //{
-                                    //    file.WriteLine("orden" + Id_Compra);
-                                    //    file.WriteLine("|");
-                                    //    file.WriteLine(ResultadoProceso.ok );
-                                    //    file.WriteLine("|");
-                                    //    file.WriteLine(ResultadoProceso.data);
-                                    //    file.WriteLine("|");
-                                    //    file.WriteLine(ResultadoProceso.message);
+                                        //string resultado = JsonConvert.SerializeObject(PO_Load);
+                                        ResultadosCarga ResultadoProceso = JsonConvert.DeserializeObject<ResultadosCarga>(responseText);
 
-                                    //}
+
+                                        //using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"C:\json\order1.txt", true))
+                                        //{
+                                        //    file.WriteLine("orden" + Id_Compra);
+                                        //    file.WriteLine("|");
+                                        //    file.WriteLine(ResultadoProceso.ok );
+                                        //    file.WriteLine("|");
+                                        //    file.WriteLine(ResultadoProceso.data);
+                                        //    file.WriteLine("|");
+                                        //    file.WriteLine(ResultadoProceso.message);
+
+                                        //}
+
+                                    }
+
+
+                                    catch (Exception e)
+                                    {
+                                        Console.Out.WriteLine(e.ToString());
+
+                                    }
+                                    */
+
+
 
                                 }
-
-
-                                catch (Exception e)
-                                {
-                                    Console.Out.WriteLine(e.ToString());
-
-                                }
-                                */
-
-
-
-                            }
 
 
 
@@ -1947,7 +1948,7 @@ namespace VtexIconTray
             //DtFecha.Value.ToString("dd/MM/yyyy");
             string Fecha = DateTime.Now.ToString("dd/MM/yyyy");
 
-            var url = $"http://157.90.80.58:9040/PAServices/api/Orders?CardCode="+Fecha;
+            var url = $"http://157.90.80.58:9040/PAServices/api/Orders?CardCode=" + Fecha;
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
 
@@ -1980,89 +1981,89 @@ namespace VtexIconTray
 
                                 //using (var streamWriter = new StreamWriter(request1.GetRequestStream()))
                                 //{
-                                    List<OrderSAP> ListaOrdenesTotal = JsonConvert.DeserializeObject<List<OrderSAP>>(responseBody);
+                                List<OrderSAP> ListaOrdenesTotal = JsonConvert.DeserializeObject<List<OrderSAP>>(responseBody);
 
-                                    for (int i = 0; i <= ListaOrdenesTotal.Count()-1; i++)
+                                for (int i = 0; i <= ListaOrdenesTotal.Count() - 1; i++)
+                                {
+
+
+
+
+
+                                    string Id_Compra = ListaOrdenesTotal[i].DocNum;
+                                    string Almacen = "ALMENEL"; // ListaOrdenesTotal.DocNum;
+                                    string Localidad = ""; // ListaOrdenesTotal.DocNum;
+                                    string TipoDocumento = "PO"; // ListaOrdenesTotal.DocNum;
+                                    string NumeroDoc = ListaOrdenesTotal[i].DocNum;
+                                    string OCompra = ListaOrdenesTotal[i].DocNum;
+                                    string NroGuiaRemision = ListaOrdenesTotal[i].DocNum;
+                                    string Observacion = ListaOrdenesTotal[i].Comments;
+                                    string FechaGuia = ListaOrdenesTotal[i].DocDate;
+                                    string FechaEmision = ListaOrdenesTotal[i].DocDate;
+                                    string Moneda = "";
+                                    string Proveedor = ListaOrdenesTotal[i].CardCode;
+                                    double TipoCambio = 3.60; // ListaOrdenesTotal.Cambio ;
+
+                                    /*        GENERA JSON         */
+
+                                    //string json = JsonConvert.SerializeObject(product);
+                                    //string path = @"c:\json\product.json";
+                                    //System.IO.File.WriteAllText(path, json);
+
+                                    /*------------------------------------------------*/
+
+                                    if (ListaOrdenesTotal[i].DocCur == "PEN")
                                     {
+                                        Moneda = "Soles";
+                                    }
+                                    else
+                                    {
+                                        Moneda = "Dolares";
+                                    }
 
+                                    List<OrderDet_DSige> Items = new List<OrderDet_DSige>();
 
+                                    //OrderDet_DSige[] Itemsa;
 
-
-
-                                        string Id_Compra = ListaOrdenesTotal[i].DocNum;
-                                        string Almacen = "ALMENEL"; // ListaOrdenesTotal.DocNum;
-                                        string Localidad = ""; // ListaOrdenesTotal.DocNum;
-                                        string TipoDocumento = "PO"; // ListaOrdenesTotal.DocNum;
-                                        string NumeroDoc = ListaOrdenesTotal[i].DocNum;
-                                        string OCompra = ListaOrdenesTotal[i].DocNum;
-                                        string NroGuiaRemision = ListaOrdenesTotal[i].DocNum;
-                                        string Observacion = ListaOrdenesTotal[i].Comments;
-                                        string FechaGuia = ListaOrdenesTotal[i].DocDate;
-                                        string FechaEmision = ListaOrdenesTotal[i].DocDate;
-                                        string Moneda = "";
-                                        string Proveedor = ListaOrdenesTotal[i].CardCode;
-                                        double TipoCambio = 3.60; // ListaOrdenesTotal.Cambio ;
-
-                                        /*        GENERA JSON         */
-
-                                        //string json = JsonConvert.SerializeObject(product);
-                                        //string path = @"c:\json\product.json";
-                                        //System.IO.File.WriteAllText(path, json);
-
-                                        /*------------------------------------------------*/
-
-                                        if (ListaOrdenesTotal[i].DocCur == "PEN")
-                                        {
-                                            Moneda = "Soles";
-                                        }
-                                        else
-                                        {
-                                            Moneda = "Dolares";
-                                        }
-
-                                        List<OrderDet_DSige> Items = new List<OrderDet_DSige>();
-
-                                        //OrderDet_DSige[] Itemsa;
-
-                                        for (int lineas = 0; lineas <= ListaOrdenesTotal[i].Lines.Count() - 1; lineas++)
-                                        {
-                                            var xItem = new OrderDet_DSige
-                                            {
-                                                Id_Compra = Id_Compra,
-                                                Id_Compra_Det = ListaOrdenesTotal[i].Lines[lineas].LineNum,
-                                                CodigoArticulo = ListaOrdenesTotal[i].Lines[lineas].ItemCode,
-                                                Cantidad = ListaOrdenesTotal[i].Lines[lineas].Quantity,
-                                                Precio = ListaOrdenesTotal[i].Lines[lineas].Price,
-                                                Estado = "A"
-                                            };
-                                            Items.Add(xItem);
-
-                                        }
-
-                                        var PO_Load = new OrderCab_DSige
+                                    for (int lineas = 0; lineas <= ListaOrdenesTotal[i].Lines.Count() - 1; lineas++)
+                                    {
+                                        var xItem = new OrderDet_DSige
                                         {
                                             Id_Compra = Id_Compra,
-                                            Almacen = Almacen,
-                                            Localidad = Localidad,
-                                            TipoDocumento = TipoDocumento,
-                                            NumeroDoc = NumeroDoc,
-                                            NroGuiaRemision = NroGuiaRemision,
-                                            OCompra = OCompra,
-                                            Observacion = Observacion,
-                                            FechaGuia = FechaGuia,
-                                            FechaEmision = FechaEmision,
-                                            Moneda = Moneda,
-                                            Proveedor = Proveedor,
-                                            TipoCambio = TipoCambio,
-                                            DetalleCompras = Items
+                                            Id_Compra_Det = ListaOrdenesTotal[i].Lines[lineas].LineNum,
+                                            CodigoArticulo = ListaOrdenesTotal[i].Lines[lineas].ItemCode,
+                                            Cantidad = ListaOrdenesTotal[i].Lines[lineas].Quantity,
+                                            Precio = ListaOrdenesTotal[i].Lines[lineas].Price,
+                                            Estado = "A"
                                         };
+                                        Items.Add(xItem);
+
+                                    }
+
+                                    var PO_Load = new OrderCab_DSige
+                                    {
+                                        Id_Compra = Id_Compra,
+                                        Almacen = Almacen,
+                                        Localidad = Localidad,
+                                        TipoDocumento = TipoDocumento,
+                                        NumeroDoc = NumeroDoc,
+                                        NroGuiaRemision = NroGuiaRemision,
+                                        OCompra = OCompra,
+                                        Observacion = Observacion,
+                                        FechaGuia = FechaGuia,
+                                        FechaEmision = FechaEmision,
+                                        Moneda = Moneda,
+                                        Proveedor = Proveedor,
+                                        TipoCambio = TipoCambio,
+                                        DetalleCompras = Items
+                                    };
 
 
                                     try
                                     {
 
                                         string json = JsonConvert.SerializeObject(PO_Load);
-                                        string path = @"c:\json\o"+ Id_Compra + ".json";
+                                        string path = @"c:\json\o" + Id_Compra + ".json";
                                         System.IO.File.WriteAllText(path, json);
 
                                         string Data = json; //nuevo
@@ -2117,50 +2118,50 @@ namespace VtexIconTray
 
                                 }
 
-                               
 
 
 
-                                    
-                                    /* llamar al WS POS */
-                                    /*
-                                     http://209.45.50.65/production/WebApi_PA_Peru /api/Migration/saveUpdatePurchaseOrder
-                                        {
+
+
+                                /* llamar al WS POS */
+                                /*
+                                 http://209.45.50.65/production/WebApi_PA_Peru /api/Migration/saveUpdatePurchaseOrder
+                                    {
+                                        "Id_Compra": "1",
+                                        "Almacen": "Almacén A",
+                                        "Localidad": "Ciudad A",
+                                        "TipoDocumento": "Factura",
+                                        "NumeroDoc": "F001",
+                                        "NroGuiaRemision": "G001",
+                                        "OCompra": "OC001",
+                                        "Observacion": "Observación 1",
+                                        "FechaGuia": "2022-01-01",
+                                        "FechaEmision": "2022-01-02",
+                                        "Moneda": "Soles",
+                                        "Proveedor": "Proveedor 1",
+                                        "TipoCambio": "3.5",
+                                        "DetalleCompras": [
+                                            {
                                             "Id_Compra": "1",
-                                            "Almacen": "Almacén A",
-                                            "Localidad": "Ciudad A",
-                                            "TipoDocumento": "Factura",
-                                            "NumeroDoc": "F001",
-                                            "NroGuiaRemision": "G001",
-                                            "OCompra": "OC001",
-                                            "Observacion": "Observación 1",
-                                            "FechaGuia": "2022-01-01",
-                                            "FechaEmision": "2022-01-02",
-                                            "Moneda": "Soles",
-                                            "Proveedor": "Proveedor 1",
-                                            "TipoCambio": "3.5",
-                                            "DetalleCompras": [
-                                                {
-                                                "Id_Compra": "1",
-                                                "Id_Compra_Det": "1",
-                                                "CodigoArticulo": "CA001",
-                                                "Cantidad": "10",
-                                                "Precio": "100.00",
-                                                "Estado": "Activo"
-                                                },
-                                                {
-                                                "Id_Compra": "1",
-                                                "Id_Compra_Det": "2",
-                                                "CodigoArticulo": "CA002",
-                                                "Cantidad": "20",
-                                                "Precio": "50.00",
-                                                "Estado": "Activo"
-                                                }
-                                            ]
-                                        }
- 
-                                     
-                                     */
+                                            "Id_Compra_Det": "1",
+                                            "CodigoArticulo": "CA001",
+                                            "Cantidad": "10",
+                                            "Precio": "100.00",
+                                            "Estado": "Activo"
+                                            },
+                                            {
+                                            "Id_Compra": "1",
+                                            "Id_Compra_Det": "2",
+                                            "CodigoArticulo": "CA002",
+                                            "Cantidad": "20",
+                                            "Precio": "50.00",
+                                            "Estado": "Activo"
+                                            }
+                                        ]
+                                    }
+
+
+                                 */
 
 
                             }
@@ -2218,9 +2219,9 @@ namespace VtexIconTray
         {
             InitializeContextMenu();
             Show();
-           
+
             this.WindowState = FormWindowState.Normal;
-           // MessageBox.Show("dsvds");
+            // MessageBox.Show("dsvds");
         }
 
         private void VtexApp_Resize(object sender, EventArgs e)
@@ -2545,7 +2546,7 @@ namespace VtexIconTray
 
 
             proceso = "Migracion manual ";
-            Adiciona( proceso + Fecha + " " + Hora);
+            Adiciona(proceso + Fecha + " " + Hora);
 
             Adiciona("Descarga Ordenes - inicio " + Fecha + " " + Hora);
 
@@ -2628,10 +2629,10 @@ namespace VtexIconTray
         private void btnSaveConfig_Click(object sender, EventArgs e)
         {
             int tiempo = 0;
-            tiempo = Convert.ToInt32(txtTime.Text );
+            tiempo = Convert.ToInt32(txtTime.Text);
             TimerVtex.Interval = (tiempo * 60) * 1000;
         }
-    }  
-    
+    }
+
 }
 

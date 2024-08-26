@@ -81,3 +81,16 @@ C:\Pa_Net\AgentPAOk_2024\obj\Debug\VtexIconTray.csproj.CoreCompileInputs.cache
 C:\Pa_Net\AgentPAOk_2024\obj\Debug\VtexIcon.5BE63B31.Up2Date
 C:\Pa_Net\AgentPAOk_2024\obj\Debug\VtexIconTray.exe
 C:\Pa_Net\AgentPAOk_2024\obj\Debug\VtexIconTray.pdb
+C:\AgentPAOk_2024\bin\Debug\VtexIconTray.exe.config
+C:\AgentPAOk_2024\bin\Debug\VtexIconTray.exe
+C:\AgentPAOk_2024\bin\Debug\VtexIconTray.pdb
+C:\AgentPAOk_2024\bin\Debug\Newtonsoft.Json.dll
+C:\AgentPAOk_2024\bin\Debug\Newtonsoft.Json.xml
+C:\AgentPAOk_2024\obj\Debug\VtexIconTray.csproj.AssemblyReference.cache
+C:\AgentPAOk_2024\obj\Debug\VtexIconTray.PAperuApp.resources
+C:\AgentPAOk_2024\obj\Debug\VtexIconTray.Properties.Resources.resources
+C:\AgentPAOk_2024\obj\Debug\VtexIconTray.csproj.GenerateResource.cache
+C:\AgentPAOk_2024\obj\Debug\VtexIconTray.csproj.CoreCompileInputs.cache
+C:\AgentPAOk_2024\obj\Debug\VtexIcon.5BE63B31.Up2Date
+C:\AgentPAOk_2024\obj\Debug\VtexIconTray.exe
+C:\AgentPAOk_2024\obj\Debug\VtexIconTray.pdb
