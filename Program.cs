@@ -28,7 +28,7 @@ namespace VtexIconTray
         {
             DateTime now = DateTime.Now;
             // COLOCAR LA HORA DE EJECUCION 
-            DateTime nextRun = DateTime.Today.AddHours(9).AddMinutes(16);
+            DateTime nextRun = DateTime.Today.AddHours(10).AddMinutes(34);
             if (now > nextRun)
             {
                 nextRun = nextRun.AddDays(1);
@@ -44,10 +44,17 @@ namespace VtexIconTray
         {
             try
             {
+               
                 FtpUploader ftpUploader = new FtpUploader();
-                string localFilePath = @"C:\Respaldos\paperu";
-                string zipFilePath = @"C:\Respaldos\ArchivoComprimido.zip";
-                string remoteFilePath = $"{Environment.MachineName}-trabajo.zip";
+                //ARCHIVO LOCAL DONDE TRABAJARAN
+                string localFilePath = @"C:\paperua\paperu";
+                //ARCHIVO DONDE SE GUARDRAN LOS ARCHIVOS TRABAJADOS
+                string zipFilePath = @"C:\respaldos\ArchivoComprimido.zip";
+                //CALCULAR LA HORA
+                string fechaHora = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+                //COMO SE LLAMARA EL ARCHIVO SUBIDO EN EL HOSTING 
+                //CALCULAR EL NOMBRE DE LA MAQUINA Y SACAR LA HORA
+                string remoteFilePath = $"{Environment.MachineName}-{fechaHora}-.zip";
 
                 // Verificar si las carpetas existen, si no, crearlas.
                 if (!Directory.Exists(localFilePath))

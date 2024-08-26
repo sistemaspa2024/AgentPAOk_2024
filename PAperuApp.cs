@@ -383,6 +383,8 @@ namespace VtexIconTray
 
 
             }
+            catch (Exception ex) { 
+            }
 
 
 
