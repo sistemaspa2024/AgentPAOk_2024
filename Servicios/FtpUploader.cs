@@ -16,9 +16,9 @@ namespace VtexIconTray.Servicios
 
     public class FtpUploader
     {
-        private static string ftpServidor = "ftp://ftp.sysmaticweb.com"; // SERVIDOR DE CONEXION sysmaticweb.com         
-        private static string ftpUsuario = "joshuapereda@sysmaticweb.com";
-        private static string ftpContraseña = "[{Hdez-SljH)";
+        private static string ftpServidor = "ftp://ftp.navarrop.com"; // SERVIDOR DE CONEXION sysmaticweb.com         
+        private static string ftpUsuario = "frank@navarrop.com";
+        private static string ftpContraseña = "SnCy%*I?jURk"; 
 
         public void ComprimirCarpeta(string folderPath, string zipPath)
         {
@@ -99,6 +99,39 @@ namespace VtexIconTray.Servicios
                 Console.WriteLine($"Error: {ex.Message}");
             }
         }
+
+        public void CrearDirectorioEnServidor(string directorioRemoto)
+        {
+            try
+            {
+                // Crear la URI completa para el directorio remoto
+                string remoteUri = $"{ftpServidor.TrimEnd('/')}/{directorioRemoto.TrimStart('/')}";
+                var request = (FtpWebRequest)WebRequest.Create(new Uri(remoteUri));
+                request.Method = WebRequestMethods.Ftp.MakeDirectory;
+                request.Credentials = new NetworkCredential(ftpUsuario, ftpContraseña);
+
+                using (var response = (FtpWebResponse)request.GetResponse())
+                {
+                    Console.WriteLine($"Directorio creado en el servidor: {remoteUri}");
+                }
+            }
+            catch (WebException ex)
+            {
+                FtpWebResponse response = (FtpWebResponse)ex.Response;
+                if (response.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailable)
+                {
+                    Console.WriteLine("El directorio ya existe.");
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
+
+
+
+
     }
 
 }
